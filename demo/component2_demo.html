@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grid Pulse EV — Component 2: Demand Profiling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep:    #080c14;
+      --bg-panel:   #0e1520;
+      --bg-card:    #111926;
+      --bg-hover:   #161f2e;
+      --border:     #1e2d42;
+      --border-lit: #2a4060;
+      --accent:     #0ea5e9;
+      --accent-dim: #0c4a6e;
+      --accent-glow:#38bdf8;
+      --green:      #22c55e;
+      --amber:      #f59e0b;
+      --red:        #ef4444;
+      --purple:     #a855f7;
+      --text-pri:   #e2eaf5;
+      --text-sec:   #7a9ab8;
+      --text-dim:   #3d5878;
+      --font:       'Inter', sans-serif;
+      --mono:       'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+    body {
+      background: var(--bg-deep);
+      color: var(--text-pri);
+      font-family: var(--font);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow-y: auto;
+    }
+    .brand {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .brand-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-pri);
+      letter-spacing: -0.3px;
+    }
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-sec);
+      margin-top: 2px;
+    }
+    .nav-group {
+      padding: 14px 10px 0;
+    }
+    .nav-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      padding: 0 8px;
+      margin-bottom: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-sec);
+      font-size: 12.5px;
+      font-weight: 500;
+      transition: all .15s;
+      margin-bottom: 1px;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-pri); }
+    .nav-item.active { background: var(--accent-dim); color: var(--accent-glow); }
+    .nav-icon { width: 15px; text-align: center; }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      margin-right: 6px;
+    }
+    .status-text { font-size: 10px; color: var(--text-sec); }
+
+    /* ── MAIN ────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOPBAR ──────────────────────────────────────── */
+    .topbar {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-left { display: flex; flex-direction: column; }
+    .topbar-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+    .topbar-sub { font-size: 11px; color: var(--text-sec); margin-top: 1px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .btn-export {
+      background: transparent;
+      border: 1px solid var(--border-lit);
+      color: var(--text-sec);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      letter-spacing: .3px;
+      transition: all .15s;
+    }
+    .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+    .tag-module {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 3px 8px;
+      text-transform: uppercase;
+    }
+
+    /* ── CONTENT ─────────────────────────────────────── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── CONTROLS ROW ────────────────────────────────── */
+    .controls-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) 1fr;
+      gap: 12px;
+      align-items: end;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 6px; }
+    .control-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .control-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-pri);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-family: var(--font);
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .control-select:focus { border-color: var(--accent); }
+    .year-display {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--accent-glow);
+      text-align: center;
+      line-height: 1;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      cursor: pointer;
+    }
+
+    /* ── TYPOLOGY TABS ───────────────────────────────── */
+    .typology-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .typo-tab {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .typo-tab:hover { border-color: var(--border-lit); background: var(--bg-hover); }
+    .typo-tab.selected { border-color: var(--accent); background: var(--accent-dim); }
+    .typo-code {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .typo-tab.selected .typo-code { color: var(--accent); }
+    .typo-name { font-size: 12px; font-weight: 600; color: var(--text-sec); margin-top: 3px; }
+    .typo-tab.selected .typo-name { color: var(--text-pri); }
+    .typo-desc { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+    /* ── CHART CARD ──────────────────────────────────── */
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .chart-title { font-size: 14px; font-weight: 600; }
+    .chart-sub { font-size: 10px; color: var(--text-sec); margin-top: 2px; }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-sec);
+    }
+    .legend-line {
+      width: 20px; height: 2px;
+      border-radius: 1px;
+    }
+    .legend-area {
+      width: 16px; height: 10px;
+      border-radius: 2px;
+      opacity: 0.4;
+    }
+    canvas#demandChart {
+      width: 100% !important;
+      display: block;
+    }
+
+    /* ── METRICS ROW ─────────────────────────────────── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .metric-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+    .metric-unit { font-size: 12px; font-weight: 400; color: var(--text-sec); margin-top: 4px; }
+
+    /* ── BOTTOM GRID ─────────────────────────────────── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .decomp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .decomp-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .decomp-sub { font-size: 10px; color: var(--text-sec); margin-bottom: 12px; }
+
+    /* ── PARAMETERS CARD ─────────────────────────────── */
+    .params-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .param-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+    }
+    .param-row:last-child { border-bottom: none; }
+    .param-name { color: var(--text-sec); }
+    .param-val {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent-glow);
+      font-weight: 500;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-badge">National Grid Planning</div>
+    <div class="brand-name">Grid Pulse EV</div>
+    <div class="brand-sub">Planning Directorate · 2026–2035</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Modules</div>
+    <div class="nav-item"><span class="nav-icon">⌘</span> Command Overview</div>
+    <div class="nav-item"><span class="nav-icon">📊</span> Fleet Projection</div>
+    <div class="nav-item active"><span class="nav-icon">⚡</span> Load Profiles</div>
+    <div class="nav-item"><span class="nav-icon">⚠</span> Risk Registry</div>
+    <div class="nav-item"><span class="nav-icon">🚀</span> Deployment Ops</div>
+  </div>
+
+  <div class="nav-group" style="margin-top:auto;">
+    <div class="nav-label">Scenarios</div>
+    <div class="nav-item" id="navLow" onclick="setScenarioNav('Low')"><span class="nav-icon" style="color:#22c55e">▼</span> Low Penetration</div>
+    <div class="nav-item active" id="navMedium" onclick="setScenarioNav('Medium')"><span class="nav-icon" style="color:#f59e0b">◆</span> Medium Penetration</div>
+    <div class="nav-item" id="navHigh" onclick="setScenarioNav('High')"><span class="nav-icon" style="color:#ef4444">▲</span> High Penetration</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div><span class="status-dot"></span><span class="status-text">ONLINE · SECURE</span></div>
+    <div style="font-size:9px;color:var(--text-dim);margin-top:4px;font-family:var(--mono)">Component 2 · N-BEATSx v1.0</div>
+  </div>
+</aside>
+
+<!-- ── MAIN ───────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">Phase 2: EV Charging Demand Modelling</div>
+      <div class="topbar-sub">24-hour stochastic load profiles based on spatial typologies · Bottom-Up Spatial Scaling</div>
+    </div>
+    <div class="topbar-right">
+      <span class="tag-module">MODULE 02 // TEMPORAL DEMAND PROFILING</span>
+      <button class="btn-export" onclick="exportReport()">⬇ EXPORT BRIEF</button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Controls Row -->
+    <div class="controls-row">
+      <div class="control-group">
+        <div class="control-label">District</div>
+        <select class="control-select" id="districtSelect" onchange="updateDashboard()">
+          <option>Colombo</option><option>Gampaha</option><option>Kalutara</option>
+          <option>Kandy</option><option>Matale</option><option>Nuwara Eliya</option>
+          <option>Galle</option><option>Matara</option><option>Hambantota</option>
+          <option>Jaffna</option><option>Kilinochchi</option><option>Mannar</option>
+          <option>Vavuniya</option><option>Mullaitivu</option><option>Batticaloa</option>
+          <option>Ampara</option><option>Trincomalee</option><option>Kurunegala</option>
+          <option>Puttalam</option><option>Anuradhapura</option><option>Polonnaruwa</option>
+          <option>Badulla</option><option>Monaragala</option><option>Ratnapura</option>
+          <option>Kegalle</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Scenario</div>
+        <select class="control-select" id="scenarioSelect" onchange="updateDashboard()">
+          <option value="Low">Low Penetration</option>
+          <option value="Medium" selected>Medium Penetration</option>
+          <option value="High">High Penetration</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Penetration Band</div>
+        <select class="control-select" id="bandSelect" onchange="updateDashboard()">
+          <option value="p50">P50 — Median</option>
+          <option value="p05">P05 — Best Case</option>
+          <option value="p95">P95 — Worst Case</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <div class="control-label">View</div>
+        <select class="control-select" id="viewSelect" onchange="updateDashboard()">
+          <option value="demand">Demand Profile</option>
+          <option value="trend">Trend Decomposition</option>
+          <option value="seasonality">Seasonality Curve</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <div class="control-label">Timeline Spec — <span id="yearLabel">2026</span></div>
+        <div class="year-display" id="yearDisplay">2026</div>
+        <input type="range" min="2026" max="2035" value="2026" id="yearSlider" oninput="onYear(this.value)" />
+      </div>
+    </div>
+
+    <!-- Typology Tabs -->
+    <div class="typology-tabs">
+      <div class="typo-tab selected" id="tab-T1" onclick="selectTypo('T1')">
+        <div class="typo-code">T1</div>
+        <div class="typo-name">Urban Commercial Hub</div>
+        <div class="typo-desc">Workplace · midday peak · Level 2</div>
+      </div>
+      <div class="typo-tab" id="tab-T2" onclick="selectTypo('T2')">
+        <div class="typo-code">T2</div>
+        <div class="typo-name">Suburban Residential</div>
+        <div class="typo-desc">Home charging · TOU shift · overnight</div>
+      </div>
+      <div class="typo-tab" id="tab-T3" onclick="selectTypo('T3')">
+        <div class="typo-code">T3</div>
+        <div class="typo-name">Tourist Destination</div>
+        <div class="typo-desc">Low SoC arrival · DC fast · variable</div>
+      </div>
+      <div class="typo-tab" id="tab-T4" onclick="selectTypo('T4')">
+        <div class="typo-code">T4</div>
+        <div class="typo-name">Highway Transit Corridor</div>
+        <div class="typo-desc">En-route top-up · bimodal · DC only</div>
+      </div>
+    </div>
+
+    <!-- Chart Card -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title" id="chartTitle">24-Hour Load Curve — Urban Commercial Hub (T1)</div>
+          <div class="chart-sub" id="chartSub">Colombo · 2026 · Medium Scenario · N-BEATSx Synthetic Profile</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-area" style="background:#38bdf8"></div>
+            5th–95th percentile envelope
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background:#38bdf8"></div>
+            P50 median curve
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background:#ef4444; height:1.5px; border-top:2px dashed #ef4444; background:none;"></div>
+            Peak demand
+          </div>
+        </div>
+      </div>
+      <canvas id="demandChart" height="200"></canvas>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">Peak Hour</div>
+        <div class="metric-value" id="metricPeakHour" style="color:#38bdf8">—:—</div>
+        <div class="metric-unit">Hour of Max Grid Demand</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Peak Magnitude</div>
+        <div class="metric-value" id="metricPeakKW" style="color:#f59e0b">— kW</div>
+        <div class="metric-unit">Maximum Instantaneous Load</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Daily Energy</div>
+        <div class="metric-value" id="metricDailyKWh" style="color:#22c55e">— kWh</div>
+        <div class="metric-unit">Total Energy Drawn Per Day</div>
+      </div>
+    </div>
+
+    <!-- Bottom Grid -->
+    <div class="bottom-grid">
+
+      <!-- Decomposition Chart -->
+      <div class="decomp-card">
+        <div class="decomp-title">N-BEATSx Decomposition</div>
+        <div class="decomp-sub">Interpretable Trend + Seasonality separation</div>
+        <canvas id="decompChart" height="140"></canvas>
+      </div>
+
+      <!-- Parameters -->
+      <div class="params-card">
+        <div class="decomp-title">Active Simulation Parameters</div>
+        <div class="decomp-sub" id="paramSub">T1 · Interview-derived posterior distributions</div>
+        <div id="paramTable"></div>
+      </div>
+
+    </div>
+  </div><!-- /content -->
+</main>
+
+<script>
+/* ── DATA MODEL ──────────────────────────────────────── */
+// Base 24-hour demand shapes per typology (normalized to 1.0 peak)
+// Derived from typology parameter distributions in Component 2 master plan
+const SHAPES = {
+  T1: [.05,.04,.03,.03,.03,.05,.12,.22,.38,.55,.72,.85,1.0,.92,.80,.70,.58,.45,.35,.28,.20,.15,.10,.07],
+  T2: [.25,.30,.28,.22,.18,.12,.08,.07,.08,.09,.10,.11,.12,.13,.15,.17,.22,.35,.55,.78,.92,1.0,.90,.65],
+  T3: [.05,.04,.03,.03,.03,.04,.06,.10,.22,.42,.60,.75,.82,.88,.90,.85,.72,.55,.40,.28,.18,.12,.08,.06],
+  T4: [.10,.08,.06,.05,.05,.06,.10,.28,.62,.85,.80,.70,.55,.50,.52,.60,.80,1.0,.88,.65,.42,.28,.18,.12],
+};
+
+// Typology display params matching master plan Section 7
+const TYPOLOGY_INFO = {
+  T1: {
+    name:'Urban Commercial Hub', code:'T1',
+    params:[
+      ['Arrival time','Normal(μ=10h, σ=1.5h)'],
+      ['SoC at arrival','Beta(α=3, β=2) ≈ 60%'],
+      ['Trip distance','LogNormal(μ=2.3, σ=0.5) ≈ 12km'],
+      ['Charger mix','Slow=15%, L2=65%, DC=20%'],
+      ['Target SoC','0.80 (80%)'],
+      ['Session freq.','Poisson(λ=4) / week'],
+      ['OSM tag','landuse=commercial'],
+    ]
+  },
+  T2: {
+    name:'Suburban Residential Zone', code:'T2',
+    params:[
+      ['Arrival (pre-TOU)','Normal(μ=20.5h, σ=1.5h)'],
+      ['TOU shift window','Uniform[22.5h–29.5h]'],
+      ['3-Phase meter','Bernoulli(p from Q8a)'],
+      ['TOU shift prob.','Bernoulli(p from Q8b|3-phase)'],
+      ['SoC at arrival','Beta(α=2, β=3) ≈ 40%'],
+      ['Trip distance','LogNormal(μ=2.8, σ=0.6) ≈ 18km'],
+      ['Charger mix','Slow=70%, L2=25%, DC=5%'],
+    ]
+  },
+  T3: {
+    name:'Tourist Destination', code:'T3',
+    params:[
+      ['Arrival time','Uniform[9h–17h]'],
+      ['SoC at arrival','Beta(α=1.5, β=5) ≈ 23%'],
+      ['Trip distance','LogNormal(μ=4.0, σ=0.7) ≈ 80km'],
+      ['Charger mix','Slow=5%, L2=25%, DC=70%'],
+      ['Target SoC','0.85 (85%)'],
+      ['Session freq.','Poisson(λ=2) / week'],
+      ['Session scaler','SLTDA TVII index'],
+    ]
+  },
+  T4: {
+    name:'Highway Transit Corridor', code:'T4',
+    params:[
+      ['Arrival time','GMM(μ₁=8h,σ=0.8 + μ₂=17h,σ=0.8)'],
+      ['SoC at arrival','Beta(α=1, β=7) ≈ 12%'],
+      ['Trip distance','LogNormal(μ=4.5, σ=0.8) ≈ 120km'],
+      ['Charger mix','Slow=0%, L2=5%, DC=95%'],
+      ['Target SoC','0.80 (80%)'],
+      ['Session freq.','Poisson(λ=1.5) / week'],
+      ['OSM tag','highway=primary / trunk'],
+    ]
+  },
+};
+
+// Fleet size scaling factors per district (relative to Colombo = 1.0)
+const DISTRICT_SCALE = {
+  'Colombo':1.00,'Gampaha':0.62,'Kalutara':0.28,'Kandy':0.45,'Matale':0.12,
+  'Nuwara Eliya':0.09,'Galle':0.22,'Matara':0.18,'Hambantota':0.08,
+  'Jaffna':0.15,'Kilinochchi':0.04,'Mannar':0.03,'Vavuniya':0.06,
+  'Mullaitivu':0.02,'Batticaloa':0.07,'Ampara':0.06,'Trincomalee':0.08,
+  'Kurunegala':0.19,'Puttalam':0.10,'Anuradhapura':0.11,'Polonnaruwa':0.05,
+  'Badulla':0.10,'Monaragala':0.04,'Ratnapura':0.12,'Kegalle':0.10,
+};
+
+// Base fleet sizes for Colombo (Medium scenario) per year
+const BASE_FLEET = { // EVs in Colombo under Medium scenario
+  2026:520, 2027:650, 2028:820, 2029:1040, 2030:1300,
+  2031:1620, 2032:2000, 2033:2480, 2034:3050, 2035:3780,
+};
+const SCENARIO_MULT = { Low:0.55, Medium:1.0, High:1.85 };
+
+/* ── STATE ───────────────────────────────────────────── */
+let state = {
+  typology: 'T1',
+  district: 'Colombo',
+  year: 2026,
+  scenario: 'Medium',
+  band: 'p50',
+  view: 'demand',
+};
+
+/* ── COMPUTE ─────────────────────────────────────────── */
+function computeCurves(typology, district, year, scenario) {
+  const shape = SHAPES[typology];
+  const distScale = DISTRICT_SCALE[district] || 0.5;
+  const fleet = Math.round(BASE_FLEET[year] * SCENARIO_MULT[scenario] * distScale);
+  // Average power per EV in kW (session weighted, from charger mix)
+  const avgKW = {T1:7.5, T2:2.8, T3:18.0, T4:32.0}[typology];
+  // Session ratio (fraction of fleet charging at peak hour)
+  const sessionRatio = {T1:0.12, T2:0.18, T3:0.08, T4:0.06}[typology];
+  const peakKW = fleet * sessionRatio * avgKW;
+
+  const p50 = shape.map(v => +(v * peakKW).toFixed(1));
+  const p05 = p50.map(v => +(v * 0.62).toFixed(1));
+  const p95 = p50.map(v => +(v * 1.45).toFixed(1));
+  return { p50, p05, p95, fleet, peakKW };
+}
+
+/* ── CHART INSTANCES ─────────────────────────────────── */
+let demandCtx, decompCtx;
+let demandGrad, p50Data, p05Data, p95Data;
+
+function buildDemandChart(p50, p05, p95) {
+  const canvas = document.getElementById('demandChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = 200 * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  canvas.style.height = '200px';
+
+  const PAD = {top:10, right:20, bottom:30, left:55};
+  const W2 = W - PAD.left - PAD.right;
+  const H2 = 200 - PAD.top - PAD.bottom;
+
+  const maxVal = Math.max(...p95) * 1.05;
+  const hours = Array.from({length:24}, (_,i) => i);
+  const xStep = W2 / 23;
+
+  const xp = i => PAD.left + i * xStep;
+  const yp = v => PAD.top + H2 - (v / maxVal) * H2;
+
+  // Grid lines
+  ctx.strokeStyle = '#1e2d42'; ctx.lineWidth = 0.5;
+  [0,.25,.5,.75,1].forEach(f => {
+    const y = PAD.top + H2 * (1-f);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left+W2, y); ctx.stroke();
+  });
+
+  // Envelope fill (p05–p95)
+  const envGrad = ctx.createLinearGradient(0, PAD.top, 0, PAD.top+H2);
+  envGrad.addColorStop(0, 'rgba(56,189,248,0.18)');
+  envGrad.addColorStop(1, 'rgba(56,189,248,0.03)');
+  ctx.beginPath();
+  ctx.moveTo(xp(0), yp(p05[0]));
+  p05.forEach((v,i) => ctx.lineTo(xp(i), yp(v)));
+  p95.slice().reverse().forEach((v,i) => ctx.lineTo(xp(23-i), yp(v)));
+  ctx.closePath();
+  ctx.fillStyle = envGrad; ctx.fill();
+
+  // P05 dashed line
+  ctx.beginPath(); ctx.setLineDash([3,4]); ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(56,189,248,0.35)';
+  p05.forEach((v,i) => i===0 ? ctx.moveTo(xp(i),yp(v)) : ctx.lineTo(xp(i),yp(v)));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // P95 dashed line
+  ctx.beginPath(); ctx.setLineDash([3,4]); ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(56,189,248,0.35)';
+  p95.forEach((v,i) => i===0 ? ctx.moveTo(xp(i),yp(v)) : ctx.lineTo(xp(i),yp(v)));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // P50 main line
+  const lineGrad = ctx.createLinearGradient(PAD.left, 0, PAD.left+W2, 0);
+  lineGrad.addColorStop(0, '#0ea5e9'); lineGrad.addColorStop(0.5, '#38bdf8'); lineGrad.addColorStop(1,'#0ea5e9');
+  ctx.beginPath(); ctx.lineWidth = 2.5;
+  ctx.strokeStyle = lineGrad;
+  p50.forEach((v,i) => i===0 ? ctx.moveTo(xp(i),yp(v)) : ctx.lineTo(xp(i),yp(v)));
+  ctx.stroke();
+
+  // Peak line
+  const peakIdx = p50.indexOf(Math.max(...p50));
+  ctx.beginPath(); ctx.setLineDash([4,3]); ctx.lineWidth = 1;
+  ctx.strokeStyle = '#ef4444';
+  ctx.moveTo(xp(peakIdx), PAD.top); ctx.lineTo(xp(peakIdx), PAD.top+H2);
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Dots on P50
+  p50.forEach((v,i) => {
+    ctx.beginPath();
+    ctx.arc(xp(i), yp(v), i===peakIdx?4.5:2, 0, Math.PI*2);
+    ctx.fillStyle = i===peakIdx?'#ef4444':'#38bdf8';
+    if(i===peakIdx) { ctx.shadowColor='#ef4444'; ctx.shadowBlur=8; }
+    ctx.fill(); ctx.shadowBlur=0;
+  });
+
+  // Y axis labels
+  ctx.fillStyle = '#3d5878'; ctx.font = '10px Inter'; ctx.textAlign='right';
+  [0,.25,.5,.75,1].forEach(f => {
+    const v = (maxVal * f).toFixed(0);
+    const y = PAD.top + H2*(1-f);
+    ctx.fillText(v+' kW', PAD.left-6, y+4);
+  });
+
+  // X axis labels (hours)
+  ctx.textAlign='center'; ctx.font='10px Inter'; ctx.fillStyle='#3d5878';
+  [0,3,6,9,12,15,18,21,23].forEach(h => {
+    ctx.fillText(String(h).padStart(2,'0')+':00', xp(h), PAD.top+H2+18);
+  });
+}
+
+function buildDecompChart(p50, year) {
+  const canvas = document.getElementById('decompChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = 140 * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  canvas.style.height = '140px';
+
+  const PAD = {top:8, right:12, bottom:22, left:40};
+  const W2 = W - PAD.left - PAD.right;
+  const H2 = 140 - PAD.top - PAD.bottom;
+  const xStep = W2 / 23;
+
+  // Trend: slowly rising smooth curve
+  const trendFactor = (year - 2026) / 9;
+  const trend = p50.map((v,i) => v * (0.4 + 0.6 * (i/23)) * (1 + trendFactor * 0.3));
+  const seasonal = p50.map((v,i) => v - trend[i] * 0.6);
+
+  const maxT = Math.max(...trend, ...seasonal.map(Math.abs)) * 1.1;
+  const xp = i => PAD.left + i * xStep;
+  const yp = v => PAD.top + H2/2 - (v / maxT) * (H2/2);
+
+  // Zero line
+  ctx.strokeStyle='#1e2d42'; ctx.lineWidth=0.5;
+  ctx.beginPath(); ctx.moveTo(PAD.left, PAD.top+H2/2); ctx.lineTo(PAD.left+W2, PAD.top+H2/2); ctx.stroke();
+
+  // Trend line
+  ctx.beginPath(); ctx.lineWidth=2; ctx.strokeStyle='#a855f7';
+  trend.forEach((v,i) => i===0 ? ctx.moveTo(xp(i),yp(v)) : ctx.lineTo(xp(i),yp(v)));
+  ctx.stroke();
+
+  // Seasonal line
+  ctx.beginPath(); ctx.lineWidth=1.5; ctx.strokeStyle='#f59e0b';
+  ctx.setLineDash([3,3]);
+  seasonal.forEach((v,i) => i===0 ? ctx.moveTo(xp(i),yp(v)) : ctx.lineTo(xp(i),yp(v)));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Labels
+  ctx.font='9px Inter'; ctx.fillStyle='#a855f7'; ctx.textAlign='left';
+  ctx.fillText('▬ Trend', PAD.left+2, PAD.top+10);
+  ctx.fillStyle='#f59e0b';
+  ctx.fillText('- - Seasonality', PAD.left+60, PAD.top+10);
+
+  // X axis
+  ctx.textAlign='center'; ctx.font='9px Inter'; ctx.fillStyle='#3d5878';
+  [0,6,12,18,23].forEach(h => {
+    ctx.fillText(String(h).padStart(2,'0')+'h', xp(h), PAD.top+H2+15);
+  });
+}
+
+/* ── UPDATE ──────────────────────────────────────────── */
+function updateDashboard() {
+  state.district = document.getElementById('districtSelect').value;
+  state.scenario = document.getElementById('scenarioSelect').value;
+  state.band     = document.getElementById('bandSelect').value;
+  state.view     = document.getElementById('viewSelect').value;
+
+  const {p50, p05, p95, fleet, peakKW} = computeCurves(state.typology, state.district, state.year, state.scenario);
+
+  // Chart title
+  const info = TYPOLOGY_INFO[state.typology];
+  document.getElementById('chartTitle').textContent =
+    `24-Hour Load Curve — ${info.name} (${state.typology})`;
+  document.getElementById('chartSub').textContent =
+    `${state.district} · ${state.year} · ${state.scenario} Scenario · Fleet: ~${fleet.toLocaleString()} EVs`;
+
+  // Draw charts
+  buildDemandChart(p50, p05, p95);
+  buildDecompChart(p50, state.year);
+
+  // Metrics
+  const peakIdx = p50.indexOf(Math.max(...p50));
+  const peakHour = String(peakIdx).padStart(2,'0') + ':00';
+  const peak = Math.max(...p50);
+  const daily = p50.reduce((s,v) => s+v, 0);
+  document.getElementById('metricPeakHour').textContent = peakHour;
+  document.getElementById('metricPeakKW').textContent = peak.toFixed(1) + ' kW';
+  document.getElementById('metricDailyKWh').textContent = daily.toFixed(0) + ' kWh';
+
+  // Params
+  document.getElementById('paramSub').textContent =
+    `${state.typology} · Survey-derived posterior distributions`;
+  const rows = info.params.map(([n,v]) =>
+    `<div class="param-row"><span class="param-name">${n}</span><span class="param-val">${v}</span></div>`
+  ).join('');
+  document.getElementById('paramTable').innerHTML = rows;
+}
+
+/* ── CONTROLS ────────────────────────────────────────── */
+function selectTypo(t) {
+  state.typology = t;
+  ['T1','T2','T3','T4'].forEach(x => {
+    document.getElementById('tab-'+x).classList.toggle('selected', x===t);
+  });
+  updateDashboard();
+}
+
+function onYear(val) {
+  state.year = parseInt(val);
+  document.getElementById('yearDisplay').textContent = val;
+  document.getElementById('yearLabel').textContent = val;
+  updateDashboard();
+}
+
+function setScenarioNav(s) {
+  document.getElementById('scenarioSelect').value = s;
+  ['Low','Medium','High'].forEach(x => {
+    document.getElementById('nav'+x).classList.toggle('active', x===s);
+  });
+  updateDashboard();
+}
+
+function exportReport() {
+  const d = state;
+  const info = TYPOLOGY_INFO[d.typology];
+  const peakEl = document.getElementById('metricPeakKW').textContent;
+  const hourEl = document.getElementById('metricPeakHour').textContent;
+  const dailyEl = document.getElementById('metricDailyKWh').textContent;
+  alert(`📊 Grid Pulse EV — Export Brief\n\nDistrict: ${d.district}\nTypology: ${info.name}\nYear: ${d.year}\nScenario: ${d.scenario}\n\nPeak Hour: ${hourEl}\nPeak Load: ${peakEl}\nDaily Energy: ${dailyEl}\n\n(Full CSV export available in the packaged system)`);
+}
+
+/* ── INIT ────────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  updateDashboard();
+  window.addEventListener('resize', updateDashboard);
+});
+</script>
+</body>
+</html>

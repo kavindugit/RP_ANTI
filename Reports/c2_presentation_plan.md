@@ -1,134 +1,286 @@
-# Component 2: Presentation Master Plan (Detailed Academic Defense)
+# Component 2: Presentation Master Plan — MSc Academic Defense (Revised)
 
-**Time Strategy (4 Minutes):** You have 10 slides. To fit within 4 minutes, you must spend exactly **24 seconds per slide**. Do not read the slides word-for-word; the slides are there to prove your *theoretical rigor* to the panel, while your voice tells the story.
+**Total Slides: 11** | **Allocated Time: 4 Minutes** | **Pace: ~22 seconds per slide**
 
----
-
-### Slide 1
-*   **Slide Title:** Component 2: 24-Hour EV Charging Demand Profile Generation & Forecasting
-*   **Visual:** Your picture (right), Component Title (left).
-*   **Slide Text (Core Novelties):**
-    *   **Data-Scarce Methodology:** A novel framework combining OpenStreetMap GIS data with primary stochastic modeling to bypass the lack of historical smart-meter data.
-    *   **Context-Aware Deep Learning:** First study training an interpretable N-BEATSx neural network on synthetic Monte Carlo profiles to extract highly interpretable trend/seasonality demand evolution.
-    *   **Tropical Battery Degradation:** Integrating temperature-dependent EV battery degradation rates unique to the Sri Lankan climate.
-*   **Speaker Notes:** *"Welcome to Component 2. The fundamental problem in Sri Lanka is a lack of historical charging data. My core novelty is a data-scarce methodological framework that generates highly accurate district-level profiles using GIS and Stochastic Modeling, and then forecasts the future using an interpretable Context-Aware Deep Learning AI."*
+**MSc Presenter Rule:** Your slides carry the academic weight (equations, methodology names, standard references). Your voice carries the story. Never read bullet points — explain the *why* behind each point.
 
 ---
 
-### Slide 2
-*   **Slide Title:** Introduction & Background: The Developing Grid Crisis
-*   **Visual:** Split screen. Grid stress image (left), text (right).
-*   **Slide Text:**
-    *   **The Global Issue:** Unmanaged EV adoption causes severe distribution transformer overloading.
-    *   **The Sri Lankan Context:**
-        *   Sri Lanka’s grid is heavily reliant on fossil fuels (coal/diesel) during the 6 PM - 10 PM peak.
-        *   Western demand models rely on massive historical datasets (which Sri Lanka lacks).
-        *   Western models fail to account for developing-grid constraints (e.g., 3-phase smart meter upgrade requirements for TOU shifting).
-*   **Speaker Notes:** *"Globally, EVs stress power grids. But in Sri Lanka, we face a unique crisis. Our evening peak is powered by coal and diesel, meaning EV charging is currently not 'green'. Furthermore, Western forecasting models cannot be used here because we lack historical data, and those models completely ignore local constraints like the lack of 3-phase domestic electricity."*
+## SLIDE STRUCTURE OVERVIEW
+
+| Slide | Section | Title |
+|---|---|---|
+| 1 | Opening | Title, Researcher, Core Novelties |
+| 2 | Background | The Developing Grid Crisis |
+| 3 | Research Gaps | Gap in Current Literature |
+| 4 | Research Question + Objectives | Unified Research Question & 6 Objectives |
+| 5 | System Overview | Component 2: End-to-End System Architecture |
+| 6 | Methodology — GIS | Spatial Typology Framework & OSM Mapping |
+| 7 | Methodology — Survey | Primary Data Collection & Ethical Clearance |
+| 8 | Methodology — Simulation | Monte Carlo Simulation & Bottom-Up Spatial Scaling |
+| 9 | Methodology — AI | Context-Aware N-BEATSx Forecasting |
+| 10 | Validation & Output | Validation Protocol & Final System Output |
+| 11 | Backup | Sensitivity Analysis & Limitations |
 
 ---
 
-### Slide 3
-*   **Slide Title:** Identified Research Gaps in Current Literature
-*   **Visual:** The Literature Comparison Table (from your Defense Report).
-*   **Slide Text:**
-    *   *(Insert Table comparing your work to 4 recent 2023/2024 papers)*
-    *   **The Theoretical Gap:** Current literature either relies purely on historical data (Deep Learning) OR purely on statistical probability (Monte Carlo) without spatial intelligence.
-    *   **The Proposed Solution:** A hybrid approach bridging Spatial GIS, Primary Behavior, and Deep Learning.
-*   **Speaker Notes:** *"As seen in this table of 2023 and 2024 literature, a clear theoretical gap exists. Existing studies use either Monte Carlo or Deep Learning independently, but none of them combine open-source GIS with primary behavioral constraints—like 3-phase metering—specifically tailored for a developing nation."*
+## SLIDE DESIGN STANDARD (Applies to Slides 2–11)
+
+> **Component Header Rule:** Every slide from Slide 2 onwards must display the following component identifier as a small label in the **top-left corner** of every slide:
+>
+> `Component 2: 24-Hour EV Charging Demand Profiling & Forecasting`
+>
+> Use a small font (10–12pt), muted colour (e.g., grey or your theme's secondary colour), so it does not compete with the slide title but is always visible to the panel.
 
 ---
 
-### Slide 4
-*   **Slide Title:** Research Objectives
-*   **Visual:** Target icon branching into three pillars.
-*   **Slide Text:**
-    *   **Primary Objective:** Develop a highly reproducible EV demand forecasting framework without historical charging data.
-    *   **O1:** Map Spatial Typologies using OpenStreetMap (OSM) GIS data.
-    *   **O2:** Extract behavioural parameters via structured primary data collection.
-    *   **O3:** Synthesize demand using a parameterized Monte Carlo simulation.
-    *   **O4:** Forecast long-term grid impact (2032-2035) using Context-Aware N-BEATSx.
-*   **Speaker Notes:** *"My primary objective is to build a reproducible forecasting framework without historical data. To achieve this, I map the geography using GIS, extract the human behavior through primary data, synthesize the current demand via Monte Carlo, and forecast the future using N-BEATSx."*
+## DETAILED SLIDE PLANS
 
 ---
 
-### Slide 5
-*   **Slide Title:** Spatial Typology Framework & GIS Mapping
-*   **Visual:** A simple matrix showing Dwell-Time vs Power for the 4 Typologies.
-*   **Slide Text:**
-    *   **The 4 Typologies:** Urban Commercial, Suburban Residential, Tourist, Highway Transit.
-    *   **Academic Justification:** Mathematically captures 100% of the EV charging behavioral spectrum (Dwell-Time vs. Power Demand).
-    *   **GIS Integration:** Typologies deliberately map to specific OpenStreetMap (OSM) tags (e.g., Commercial = `landuse=commercial`) to enable automated spatial density extraction via GeoPandas.
-*   **Speaker Notes:** *"How did we select our 4 typologies? First, they mathematically capture the entire behavioral spectrum of dwell-time and power demand. Second, I specifically designed them to map directly to OpenStreetMap land-use tags. This allows us to use GeoPandas to automatically extract the exact spatial density of every district in the country."*
+### Slide 1 — Title & Core Novelties
+**Title:** Component 2: 24-Hour EV Charging Demand Profile Generation & Forecasting for Sri Lanka (2026–2035)
+
+**Visual:** Dark academic theme. Researcher name (top left). University logo (top right). One highlighted novelty box centered at the bottom.
+
+**Slide Text — Core Research Novelty:**
+- **Novel Contribution:** A reproducible end-to-end framework combining geospatial land-use modeling, primary survey-derived stochastic simulation, and interpretable deep learning to generate and forecast district-level EV charging demand profiles in the absence of historical charging data.
+
+**Speaker Notes:** *"My component addresses the fundamental data problem in Sri Lanka — we have zero historical EV charging data. My single core novelty is an end-to-end reproducible framework that bridges three domains: geospatial land-use modeling using OSM, primary stochastic simulation using Monte Carlo, and interpretable deep learning using N-BEATSx. Together, these three produce the first district-level EV grid demand forecast for Sri Lanka without requiring any historical smart-meter data."*
 
 ---
 
-### Slide 6
-*   **Slide Title:** Methodology: Intersecting Three Knowledge Domains
-*   **Visual:** A Venn Diagram of the 3 domains.
-*   **Slide Text:**
-    *   **Geospatial Analysis (GIS):** Utilizing *OpenStreetMap (OSM) & GeoPandas* to map land-use densities across 25 districts.
-    *   **Stochastic Modeling:** Utilizing a *Vectorized Monte Carlo Engine* to mathematically simulate probability distributions (Lognormal, Beta, Poisson) for human charging behavior.
-    *   **Deep Learning:** Utilizing the *N-BEATSx (Neural Basis Expansion Analysis)* architecture to perform multi-variate, context-aware forecasting.
-*   **Speaker Notes:** *"Theoretically, my methodology bridges three domains. I use OpenStreetMap and GeoPandas for geospatial mapping. I use a customized Monte Carlo engine to process stochastic behavioral distributions. Finally, I use the N-BEATSx architecture for deep learning forecasting."*
+### Slide 2 — Introduction & Background
+**Title:** The Developing Grid Crisis: Why Sri Lanka Cannot Use Existing Models
+
+**Visual:** Left — photograph of a CEB substation or power line (or a stylized map of Sri Lanka). Right — three bullet problem statements.
+
+**Slide Text:**
+- **The Global Problem:** Unmanaged EV charging causes distribution transformer overloading (IEA, 2023)
+- **Sri Lankan Constraint 1 — No Data:** Western Deep Learning models require years of historical smart-meter data which Sri Lanka does not have
+- **Sri Lankan Constraint 2 — Infrastructure Gap:** CEB Time-of-Use (TOU) tariff shifting requires a 3-Phase domestic electricity connection. Only a fraction of Sri Lankan homes have this — existing models completely ignore this constraint
+- **Sri Lankan Constraint 3 — Fleet Composition:** Sri Lanka's EV fleet is dominated by passively air-cooled Nissan Leafs (hot-climate accelerated battery degradation). Western models assume liquid-cooled batteries
+
+**Speaker Notes:** *"The Sri Lankan grid context is unique in three ways. First, we have no historical data. Second, our TOU metering infrastructure is far behind Western grids. Third, our most common EV — the Nissan Leaf — degrades far faster in tropical heat. Any model that ignores these three constraints will produce dangerous over-estimates of grid load."*
 
 ---
 
-### Slide 7
-*   **Slide Title:** Validation Protocol
-*   **Visual:** Two-tier diagram (AI vs Synthetic Data).
-*   **Slide Text:**
-    *   **AI Validation:** Hold-Out Testing (RMSE, MAPE).
-    *   **Data Validation:** Heuristic Checks & CEB Expert Delphi Method (Face Validity).
-*   **Speaker Notes:** *"Because we are generating synthetic data, validation is critical. The AI is validated mathematically using standard metrics like RMSE and MAPE. The synthetic district curves are physically validated by senior CEB engineers using the Delphi Method to ensure absolute face-validity before forecasting."*
+### Slide 3 — Research Gaps
+**Title:** Theoretical Gaps in Current Literature
+
+**Visual:** Two-panel layout (matching the academic standard format):
+- **Left panel:** Short description of each existing approach (3 lines each, small font, with label bold)
+- **Right panel:** Feature matrix — approaches as columns, capability criteria as rows, ✓/✗ in cells
+
+**Slide Text — Left Panel (Approach Descriptions):**
+
+**Approach A** — Agent-Based Modeling (ABM)
+Simulates individual EV driver agents with detailed behavioral rules and survey-derived parameters. Captures micro-level user decisions but lacks functional land-use spatial decomposition and long-term demand forecasting capability.
+
+**Approach B** — Stochastic Monte Carlo Simulation
+Samples probabilistic distributions to generate demand profiles. Operates without historical data and some studies use generic surveys, but parameters are not stratified by functional land-use typology across all districts. No interpretable forecasting layer.
+
+**Approach C** — GIS-Integrated Spatial Planning Models
+Combines geographic land-use and infrastructure data to map charging demand spatially. Provides district-level spatial coverage but depends on secondary spatial datasets and cannot produce interpretable temporal demand forecasts.
+
+**Gap:** No existing approach simultaneously achieves all four capabilities required for district-level EV grid planning in a data-scarce developing-nation context.
+
+**Slide Text — Right Panel (Feature Matrix):**
+
+| Capability | Approach A (ABM) | Approach B (MC Simulation) | Approach C (GIS-Spatial) | **Proposed System** |
+|---|---|---|---|---|
+| Functional Land-Use Typology Spatial Profiling | ✗ | ✗ | Partial (infrastructure siting only) | ✓ (25 districts × 4 typologies) |
+| Primary Behavioral Survey Data | ✓ | Partial (not country-specific) | ✗ | ✓ (160–200 Sri Lankan EV owners) |
+| Data-Scarce Operation | ✓ | ✓ | ✓ | ✓ |
+| Interpretable Demand Forecasting | ✗ | ✗ | ✗ | ✓ (N-BEATSx Trend + Seasonality) |
+
+**Speaker Notes:** *"I compare my research against three real methodological categories from current literature. Approach A — Agent-Based Modeling — does use behavioral surveys and operates without historical data, but it cannot decompose demand by functional land-use typology across 25 districts, and it has no forecasting capability. Approach B — Monte Carlo simulation — is also data-scarce capable, but existing studies use generic parameters not stratified by country-specific functional typologies. Approach C — GIS spatial planning — maps space well, but uses secondary data and cannot forecast demand evolution. Notice that only the Proposed System satisfies all four capabilities simultaneously. The critical gap is the combination of typology-based spatial profiling with interpretable deep learning forecasting — no existing approach achieves both."*
 
 ---
 
-### Slide 8 (CRITICAL SLIDE)
-*   **Slide Title:** Primary Data Collection & Ethical Clearance
-*   **Visual:** A large **QR Code** linking to your Google Form.
-*   **Slide Text:**
-    *   **Academic Methodology:** Stratified Purposive & Snowball Sampling.
-    *   **Statistical Sample Size:** 160-200 EV Owners (>95% Confidence Level).
-    *   **Data Extracted:** Target SoC, Arrival Time (Beta), Trip Distance (Lognormal), 3-Phase Meter Availability.
-    *   **Ethical Clearance:** Complete data anonymization. No Personally Identifiable Information (PII) collected from respondents.
-*   **Speaker Notes:** *"Because we lack historical data, this primary survey is the engine of the research. You can scan the QR code to see it. We use Stratified Purposive and Snowball sampling, targeting 160 to 200 EV owners, giving us a >95% Confidence Level. Crucially, all data undergoes strict ethical clearance, meaning absolutely no PII is collected and all behavioral data is fully anonymized."*
+### Slide 4 — Research Question & Objectives
+**Title:** Research Objective & Sub-Objectives
+
+**Visual:** Three-tier visual hierarchy. Top band = Research Question (highlighted). Middle band = Main Objective (bold box). Bottom band = 6 sub-objectives in a numbered two-column grid.
+
+**Research Question (large highlighted box at top):**
+> *"How do 24-hour EV charging demand profiles, stratified by functional place typology, evolve in shape and magnitude across Sri Lanka's 25 districts from 2026 to 2035 under different EV penetration scenarios?"*
+
+**Main Objective:**
+> Develop a **reproducible, data-scarce EV charging demand forecasting framework** that generates accurate 24-hour district-level load profiles and long-term grid demand forecasts for Sri Lanka without relying on historical smart-meter data.
+
+**Sub-Objectives:**
+- **SO1 — Spatial Mapping:** Compute district-level typology weights using OSM land-use density data.
+- **SO2 — Primary Data:** Collect behavioral charging parameters from 160–200 Sri Lankan EV owners via survey.
+- **SO3 — Stochastic Simulation:** Build a Monte Carlo engine to generate 3,000 synthetic 24-hour demand profiles (2026–2035).
+- **SO4 — Interpretable Forecasting:** Train N-BEATSx to forecast district-level demand evolution for 2032–2035.
+- **SO5 — Multi-Tier Validation:** Validate profiles against CEB feeder data and SLTDA tourist statistics.
+- **SO6 — Sensitivity Analysis:** Identify behavioral parameters most influential on peak grid demand.
+
+**Speaker Notes:** *"My main objective is to build a reproducible forecasting framework that works without historical data — a core challenge in developing nations like Sri Lanka. To achieve this, I have six measurable sub-objectives. SO1 through SO3 build the data pipeline: GIS mapping, primary survey, and Monte Carlo simulation. SO4 adds the forecasting intelligence via N-BEATSx. SO5 and SO6 provide rigorous scientific validation and parameter sensitivity testing. Every sub-objective has a measurable, verifiable output."*
 
 ---
 
-### Slide 9 (CRITICAL SLIDE)
-*   **Slide Title:** Implementation: Bottom-Up Spatial Scaling
-*   **Visual:** Diagram: [Survey Shape] x [OSM/DMT Scale] = [25 District Curves]
-*   **Slide Text:**
-    *   **Methodology:** Bottom-Up Spatial Scaling (Spatial Micro-Simulation).
-    *   **Step 1 (The Shape):** The Monte Carlo engine processes the survey data to output 4 normalized probability curves (representing the 4 Typologies).
-    *   **Step 2 (The Scale):** District Fleet Size (DMT Data) and District Typology Weights (OSM GIS Data) act as scaling multipliers.
-    *   **Step 3 (The Generation):** `Typology Shape` × `District Fleet Size` × `OSM GIS Weights` = 25 Unique District-Level Demand Profiles (in MW).
-    *   **Computational Scale:** Rigorous Convergence Test ($N^*$) executed across **3,300 simulation combinations** to output Low, Medium, and High adoption scenarios.
-*   **Speaker Notes:** *"How do we generate 25 district curves without surveying all 25 districts? We use a globally recognized mathematical standard called Bottom-Up Spatial Scaling. The Monte Carlo engine generates the 'shape' of the curves from our survey data. Then, we use the GIS OpenStreetMap weights and DMT fleet size to 'scale' those curves. Finally, we run a rigorous statistical Convergence Test to execute exactly 3,300 simulation combinations, outputting Low, Medium, and High demand scenarios for the grid."*
+### Slide 5 — System Architecture (CRITICAL — Show Early)
+**Title:** Component 2: End-to-End System Architecture
+
+**Visual:** A clean left-to-right flowchart with 3 color-coded phases:
+- **Phase 1 (Blue — Inputs):** Two stacked boxes: `Primary Survey (160-200 EV Owners)` + `OSM GIS & DMT Fleet Data`
+- **Phase 2 (Green — Synthesis):** `Vectorized Monte Carlo Engine` → `3,000 Synthetic District Curves (2026–2035)`
+- **Phase 3 (Purple — Forecasting):** `Gaussian Data Augmentation` → `Context-Aware N-BEATSx` → `2032–2035 Trend + Seasonality Forecasts`
+- **Output (Orange):** `Proposed Decision-Support Tool (Grid Pulse EV) → CEB Planning Directorate`
+
+All phases connected by bold arrows. Label each arrow with what is being transferred.
+
+**Slide Text:** Keep minimal — let the diagram speak.
+- Training split: **2026–2031** (synthetic "past") → **2032–2035** (AI forecast)
+- 25 Districts × 4 Typologies × 3 Scenarios × 10 Years = **3,000 simulation runs**
+
+**Speaker Notes:** *"Before diving into the methodology, let me show you the complete system. On the left, two data sources feed the engine: our primary survey and open-source GIS data. The Monte Carlo engine in the center generates a synthetic 10-year dataset. The right side is the AI — N-BEATSx is trained on 2026 to 2031, then forecasts 2032 to 2035. The final output is a web dashboard usable directly by CEB engineers."*
 
 ---
 
-### Slide 10
-*   **Slide Title:** Implementation: Interpretable AI Forecasting
-*   **Visual:** Flowchart (Curves ➡️ Augmentation ➡️ N-BEATSx ➡️ Trend/Seasonality).
-*   **Slide Text:**
-    *   **Data Augmentation:** Gaussian Noise & Time Jittering (Expanding 175 base curves to 1,750+ training sequences to prevent overfitting).
-    *   **Model:** Context-Aware N-BEATSx.
-    *   **Static Exogenous Inputs:** District ID, Typology, Fleet Size.
-    *   **Forecast Output:** Mathematically interpretable `Trend Curve` (Y-o-Y growth) and `Seasonality Curve` (daily peak shape).
-*   **Speaker Notes:** *"Finally, we augment those district curves using Gaussian noise to generate over 1,700 training sequences to prevent AI overfitting. We feed this into a Context-Aware N-BEATSx model, utilizing District IDs as exogenous inputs. The result is a highly interpretable forecast that outputs exactly how the grid demand trend and daily seasonality will evolve up to 2035. Thank you."*
+### Slide 6 — Spatial Typology Framework & OSM Mapping
+**Title:** Spatial Typology Framework: Behavioral Spectrum + GIS Automation
+
+**Visual:** A 2×2 matrix. X-axis: Short Dwell ↔ Long Dwell. Y-axis: Low Power ↔ High Power. Four quadrants each labeled with a typology.
+
+**Slide Text:**
+| Typology | Dwell Time | Core Behaviour | Arrival Distribution | OSM Tag |
+|---|---|---|---|---|
+| T1 — Urban Commercial | Medium (office hours) | Workplace / midday charging | Normal (office hours pattern) | `landuse=commercial` |
+| T2 — Suburban Residential | Long (overnight) | Home charging + TOU tariff shift | Normal (late evening peak) | `landuse=residential` |
+| T3 — Tourist Destination | Variable (9am–5pm) | Inter-district, low SoC arrival | Uniform (daytime window) | `tourism=*`, POI count |
+| T4 — Highway Transit | Ultra-short (en-route) | En-route top-up, bimodal flow | Gaussian Mixture (morning + evening peaks) | `highway=trunk/primary` |
+
+- **Academic Justification:** Typologies cover 100% of the behavioral spectrum by dwell-time pattern, derived from land-use planning theory. Charger type and power are **survey-derived** (Q4), not assumed.
+- **OSM Weighting:** Land-use density per typology is normalized per district using GeoPandas to produce typology composition weights.
+
+**Speaker Notes:** *"I designed these 4 typologies based on land-use planning theory — each one captures a distinct dwell-time pattern: medium for offices, long overnight for residential, variable for tourism, and ultra-short en-route for highways. I specifically did not pre-define charger types for these typologies — the actual charger mix used in each typology is empirically derived from the survey. The second key design principle is that every typology maps to a specific OpenStreetMap land-use tag, allowing GeoPandas to automatically compute its spatial weight in every district."*
 
 ---
 
-### Slide 11 (Extra: System Architecture Diagram)
-*   **Slide Title:** Component 2 System Architecture
-*   **Visual:** A clean, left-to-right flowchart. Use 3 distinct colors for the 3 main phases (Inputs, Synthesis, Forecasting). Do not clutter the screen; use large boxes with clear arrows.
-    *   *Block 1 (Left - The Inputs):* Two boxes stacked vertically. Top box: `Primary Survey Data (Behavioral Shape)`. Bottom box: `OSM & DMT Data (Spatial Scale)`. Both point to...
-    *   *Block 2 (Middle - The Engine):* A large gear icon labeled `Vectorized Monte Carlo Simulation`. This points to...
-    *   *Block 3 (Middle Right - The Link):* A box labeled `25 District Profiles + Gaussian Augmentation (1,750 Curves)`. This points to...
-    *   *Block 4 (Right - The AI):* A brain/network icon labeled `Context-Aware N-BEATSx Engine`.
-    *   *Final Output (Far Right):* `2035 Trend & Seasonality Forecast`.
-*   **Slide Text:** Keep text minimal. Let the flowchart do the talking. Use standard arrow notation to show the data flow.
-*   **Speaker Notes:** *"This diagram represents the complete data pipeline of Component 2. On the left, we ingest our primary survey data and GIS weights. These feed into the Monte Carlo engine in the center to generate synthetic district curves. Those curves are augmented and fed into the N-BEATSx forecasting engine on the right, which outputs our final 2035 trend predictions. It is a seamless flow from raw spatial data to deep learning forecasts."*
-*   **Presenter Tip:** You can keep this as Slide 11 (Backup), or move it to **Slide 5** to give the panel a high-level "map" of your component before you explain the specific methodologies!
+### Slide 7 — Primary Data Collection & Ethical Clearance
+**Title:** Primary Data Collection: Survey Design, Sample Size & Ethics
+
+**Visual:** Left — large QR Code to Google Form. Right — parameter-to-distribution mapping table.
+
+**Slide Text:**
+- **Sampling Methodology:** Stratified Purposive Sampling (by Typology) + Snowball Sampling (for hard-to-reach EV owners — justified: no centralized EV registry exists in Sri Lanka)
+- **Statistical Justification:** Cochran's Formula for finite population (N=8,655 registered EVs) → minimum n=95 required at 95% confidence. Target: **160–200 respondents** (margin of error ~7%)
+- **Key Parameters Extracted:**
+
+| Survey Q | Behavioral Variable | Proposed Distribution Model (Literature-Based) |
+|---|---|---|
+| Trip distance | `d_trip` | LogNormal — trip distances are right-skewed continuous |
+| SoC at plug-in | `SoC_arr` | Beta — bounded variable [0, 1] |
+| Arrival time | `t_arr` | Normal or Gaussian Mixture — unimodal or bimodal by typology |
+| Charger type | `c_type` | Multinomial — discrete multi-category choice |
+| 3-Phase meter | `p_3phase` | Bernoulli — binary yes/no infrastructure status |
+| Session frequency | `λ` | Poisson — count of sessions per week |
+
+> **Note:** Distribution families are theoretically selected based on variable properties and published EV demand literature. Actual parameters (μ, σ, α, β, λ) will be estimated from survey responses using Maximum Likelihood Estimation (MLE) post data collection.
+
+- **Ethical Clearance:** Respondent ID only (no name/address). Full anonymization. No PII stored. Preamble read to all respondents.
+
+**Speaker Notes:** *"Because no historical data exists, this survey is the foundation of the entire simulation. Using Cochran's formula, I need only 95 respondents for 95% confidence from Sri Lanka's 8,655 EV fleet — I target 160 to 200 for rigor. The table shows the distribution model I have theoretically proposed for each variable, based on the statistical properties of that variable and published EV charging literature. For example, trip distance is always right-skewed and bounded at zero, which makes LogNormal the theoretically correct family. SoC at arrival is bounded between 0 and 1, making Beta the correct family. These are prior choices — after the survey is completed, I will use Maximum Likelihood Estimation to fit the actual parameters from the collected responses. All data is fully anonymized with absolutely no PII collected."*
+
+---
+
+### Slide 8 — Monte Carlo Simulation & Bottom-Up Spatial Scaling
+**Title:** Monte Carlo Engine & Bottom-Up Spatial Scaling (Spatial Micro-Simulation)
+
+**Visual:** Three-step flow diagram: `[Survey Shape]` × `[OSM Weights + DMT Fleet]` = `[25 District Curves (MW)]`
+
+**Slide Text:**
+- **Core Methodology: Bottom-Up Spatial Scaling (Spatial Micro-Simulation)**
+  - **Step 1 — The Shape:** Survey data → 4 normalized typology probability curves (one per typology, representing behavioral patterns)
+  - **Step 2 — The Scale:** District fleet size (from Component 1) is weighted by OSM land-use density per typology per district
+  - **Step 3 — Generation:** Typology Shape × District Fleet × OSM Weight → **25 unique district demand profiles in MW**
+- **Why Monte Carlo?** To stochastically simulate thousands of individual EV sessions per district using six behavioural and physical inputs (survey-derived + literature-derived) — outputs the P05, P50, P95 uncertainty envelopes per district
+- **Computational Scale:** Convergence Test ($N^*$) → **3,000 simulation runs** (10yr × 25 districts × 4 typologies × 3 scenarios)
+
+**Speaker Notes:** *"The headline innovation of this slide is Bottom-Up Spatial Scaling. The survey gives us the behavioral shape of each typology's demand curve. We then scale that shape by the actual fleet size in each district, weighted by the OSM GIS density. This mathematically generates 25 unique district curves without surveying all 25 districts. The Monte Carlo engine runs this process stochastically thousands of times across six behavioural and physical inputs to output three uncertainty bands — low, median, and high — for every district."*
+
+---
+
+### Slide 9 — Context-Aware N-BEATSx Forecasting
+**Title:** Interpretable Deep Learning: Context-Aware N-BEATSx Architecture
+
+**Visual:** Flowchart — `[Synthetic District Profiles]` → `[Gaussian Augmentation]` → `[N-BEATSx: Trend Block + Seasonality Block]` → `[Trend Curve + Seasonality Curve]`
+
+**Slide Text:**
+- **Why N-BEATSx?** Its architecture is structurally interpretable — it mathematically decomposes the forecast output into two separate, explainable components, making it directly suitable for grid engineering planning decisions.
+- **Training Split:**
+  - **Train:** 2026–2031 (6 years × 25 districts = 150 synthetic profiles) — augmented via Gaussian noise and time-jittering to expand training sequences
+  - **Test (Hold-Out):** 2032–2035 — held out completely, never seen by the model during training
+- **Context Inputs (Exogenous Variables):** District ID (categorical), Typology (categorical), Fleet Size (numerical)
+- **Outputs:** `Trend Curve` — Year-on-Year grid demand growth | `Seasonality Curve` — shifting daily peak shape
+- **Baseline Comparison:** N-BEATSx performance compared against a statistical baseline model — result reported honestly regardless of outcome
+
+**Speaker Notes:** *"N-BEATSx is selected because its architecture is structurally interpretable — it mathematically separates the forecast into a Trend block and a Seasonality block, giving CEB engineers an explainable output they can use directly for grid planning. I train the model on 2026-to-2031 synthetic profiles, with data augmentation applied to expand training sequences and prevent overfitting. The model is tested on the completely hidden 2032-to-2035 hold-out set. The exogenous inputs — district, typology, and fleet size — allow the model to be context-aware across all 25 districts. Performance is compared against a statistical baseline and reported honestly."*
+
+---
+
+### Slide 10 — Validation & Final Output
+**Title:** Two-Tier Validation Protocol & Final Research Output
+
+**Visual:** Left column — Tier 1 (AI Validation). Right column — Tier 2 (Simulation Validity). Below both — a screenshot of the Grid Pulse EV dashboard.
+
+**Slide Text:**
+- **Tier 1 — AI Model Validation (Mathematical):**
+  - Hold-Out Test: N-BEATSx predictions vs. Monte Carlo 2032–2035 ground truth
+  - Metrics: RMSE per hour, MAPE on peak demand, Pearson r on curve shape
+  - Baseline: Compared against a statistical baseline model — result reported honestly regardless of outcome
+- **Tier 2 — Simulation Validity (Physical/Face Validity):**
+  - T1 Commercial peak window (10am–2pm) compared against CEB Annual Report commercial feeder data
+  - T2 Residential evening peak compared against CEB Statistical Digest residential load factor
+  - T3 Tourist seasonal peaks compared against SLTDA monthly arrival statistics
+  - T4 Highway bimodal peak compared against published Sri Lanka traffic flow studies
+- **Proposed Decision-Support Tool — Grid Pulse EV Dashboard** → CEB Planning Directorate:
+  - CEB engineers select: District + Typology + Year → Instant 24-hour demand curve
+  - Outputs: Peak Hour, Peak Magnitude (kW), Daily Energy (kWh), P05/P50/P95 probability envelopes
+  - Accessible without any programming knowledge
+
+**Speaker Notes:** *"Validation happens on two levels. At the AI level, N-BEATSx is mathematically validated using hold-out testing against ground-truth Monte Carlo curves using RMSE and MAPE. At the simulation level, each typology's demand shape is physically validated against real surrogate data from CEB and SLTDA. The final product is the Grid Pulse EV web dashboard — a fully deployed tool that allows CEB planning engineers to generate instant district-level demand forecasts for any year up to and beyond 2035."*
+
+---
+
+### Slide 11 — Backup: Sensitivity Analysis & Limitations
+**Title:** Sensitivity Analysis & Honest Limitations
+
+**Visual:** Two-column card layout — left = sensitivity, right = limitations.
+
+**Slide Text:**
+- **Sensitivity Analysis (O6):** Testing parameter ranges to identify most influential inputs:
+
+| Parameter | Tested Range | Impact Measured |
+|---|---|---|
+| TOU shift probability | ±30% | Residential overnight peak kW |
+| Nissan Leaf degradation rate | 2.0–4.5%/yr | SoC arrival distribution |
+| Tourist party size | 2.0–4.0 persons/vehicle | T3 district EV count |
+| Monte Carlo N iterations | 0.5N* to 1.5N* | Coefficient of variation of peak |
+
+- **Limitations & Mitigations:**
+  - Survey may over-represent early adopters → Two-phase design (mainstream correction for 2028–2035)
+  - OSM coverage sparse in rural districts → Supplement with Geofabrik extract + Sentinel-2 land cover
+  - N-BEATSx may not outperform ARIMA → Planned comparison, result reported honestly regardless of outcome
+  - Component 1 projections carry uncertainty → Propagated through Low/Medium/High scenarios
+
+**Speaker Notes:** *"Finally, I want to be transparent about limitations — which is a marker of rigorous academic work. My sensitivity analysis formally tests how sensitive the model's outputs are to each uncertain parameter. And my limitations section honestly states that if N-BEATSx does not beat the ARIMA baseline, the result will be reported truthfully. The science is the priority, not the outcome."*
+
+---
+
+## PRESENTATION DELIVERY GUIDE
+
+| Section | Slides | Target Time |
+|---|---|---|
+| Opening + Background | 1–2 | ~45 sec |
+| Gaps + Objectives | 3–4 | ~40 sec |
+| System Architecture | 5 | ~20 sec |
+| Methodology (GIS + Survey + MC + AI) | 6–9 | ~90 sec |
+| Validation + Output | 10 | ~20 sec |
+| **Total** | **10 slides** | **~3:55 min** |
+| Backup (Sensitivity) | 11 | Q&A only |
+
+> **Key Principle (MSc Level):** Every claim on every slide must be backed by either a named statistical distribution, a named academic standard, a named external data source, or a named algorithm. Vague statements like "we use machine learning" are not acceptable at this level.
